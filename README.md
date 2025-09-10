@@ -1,0 +1,62 @@
+
+---
+
+## 🐍 Código inicial (main.py)
+```python
+import csv
+from datetime import datetime
+
+ARQUIVO = "gastos.csv"
+
+def adicionar_gasto():
+    descricao = input("Descrição: ")
+    valor = float(input("Valor: "))
+    data = datetime.now().strftime("%d/%m/%Y")
+
+    with open(ARQUIVO, "a", newline="", encoding="utf-8") as f:
+        escritor = csv.writer(f)
+        escritor.writerow([descricao, valor, data])
+    print("✅ Gasto adicionado com sucesso!")
+
+def listar_gastos():
+    try:
+        with open(ARQUIVO, "r", encoding="utf-8") as f:
+            leitor = csv.reader(f)
+            print("\n--- Lista de Gastos ---")
+            for linha in leitor:
+                print(f"{linha[0]} - R${linha[1]} em {linha[2]}")
+    except FileNotFoundError:
+        print("Nenhum gasto registrado ainda.")
+
+def total_gastos():
+    total = 0
+    try:
+        with open(ARQUIVO, "r", encoding="utf-8") as f:
+            leitor = csv.reader(f)
+            for linha in leitor:
+                total += float(linha[1])
+        print(f"\n💵 Total gasto: R${total:.2f}")
+    except FileNotFoundError:
+        print("Nenhum gasto registrado ainda.")
+
+def menu():
+    while True:
+        print("\n--- Controle de Gastos ---")
+        print("1 - Adicionar gasto")
+        print("2 - Listar gastos")
+        print("3 - Total gasto")
+        print("0 - Sair")
+
+        opcao = input("Escolha: ")
+        if opcao == "1":
+            adicionar_gasto()
+        elif opcao == "2":
+            listar_gastos()
+        elif opcao == "3":
+            total_gastos()
+        elif opcao == "0":
+            break
+        else:
+            print("Opção inválida!")
+
+menu()
